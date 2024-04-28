@@ -1,0 +1,97 @@
+defaults:
+  - Domain
+  - _self_
+
+name: Bookshelf
+
+env:
+  geometry:
+    bookshelf:
+      book_size_x: 0.14
+      book_size_y: 0.04
+      book_size_z: 0.2
+      width: 0.01
+      height: 0.4
+    object:
+      density: 500
+  camera:
+    position: [0.25, -0.3, 0.8]
+    target: [0.5, 0.0, 0.4]
+
+task:
+  # random_external_force: True
+  #   interval_timestep: 50
+  #   max_force: 
+  #   decay: 
+  observation_randomize: False
+  image_randomize: False
+  env_randomize: False
+  torque_randomize: False
+  camera_randomize: False
+  randomization_params:
+    frequency: 1   # Define how many simulation steps between generating new randomizations
+    observations:
+      range: [0.0, 0.03] # range for the white noise
+      # range_correlated: [0, .001 ] # range for correlated noise, refreshed with freq `frequency`
+      operation: "additive"
+      distribution: "gaussian"
+      # schedule: "linear"   # "constant" is to turn on noise after `schedule_steps` num steps
+      # schedule_steps: 40000
+    image: "None"
+    camera:
+      fov: True
+      transform: True
+    # actions:
+    #   range: [0., .05]
+    #   range_correlated: [0, .015] # range for correlated noise, refreshed with freq `frequency`
+    #   operation: "additive"
+    #   distribution: "gaussian"
+      # schedule: "linear"  # "linear" will linearly interpolate between no rand and max rand
+      # schedule_steps: 40000
+    #sim_params: 
+    #  gravity:
+    #    range: [0, 0.4]
+    #    operation: "additive"
+    #    distribution: "gaussian"
+        # schedule: "linear"  # "linear" will linearly interpolate between no rand and max rand
+        # schedule_steps: 40000
+    actor_params:
+      table:
+        rigid_shape_properties: 
+          friction: 
+            range: [0.8, 1.2]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True
+      # robot:
+      #   rigid_shape_properties: 
+      #     friction: 
+      #       num_buckets: 250
+      #       range: [0.9, 1.1]
+      #       operation: "scaling"
+      #       distribution: "uniform"
+      #       setup_only: True
+      object:
+        scale:
+          range: [0.9, 1.1]
+          operation: "scaling"
+          distribution: "uniform"
+          setup_only: True # Property will only be randomized once before simulation is started. See Domain Randomization Documentation for more info.
+          # schedule: "linear"  # "linear" will scale the current random sample by ``min(current num steps, schedule_steps) / schedule_steps`
+          # schedule_steps: 30000
+        rigid_shape_properties: 
+          friction: 
+            range: [0.8, 1.2]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True
+        rigid_body_properties:
+          mass: 
+            range: [0.9, 1.1]
+            operation: "scaling"
+            distribution: "uniform"
+            setup_only: True # Property will only be randomized once before simulation is started. See Domain Randomization Documentation for more info.
+    torque:
+      range: [1.0, 0.01] # [mu, var]
+      operation: "scaling"
+      distribution: "gaussian"

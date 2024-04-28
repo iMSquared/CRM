@@ -1,0 +1,132 @@
+# used to create the object
+name: Hole
+
+physics_engine: ${..physics_engine}
+
+# if given, will override the device setting in gym. 
+env:
+  numEnvs: ${resolve_default:24576,${...num_envs}}
+  envSpacing: 1
+  episodeLength: 300
+  enableDebugVis: False
+  extract_successes: False
+  seed: ${...seed}
+  clipObservations: 5.0
+  clipActions: 1.0
+  keypoint: 
+    activate: False
+    num: 8
+  difficulty: pre_contact_policy
+  startPositionNoise: 0.0
+  startRotationNoise: 0.0
+  aggregateMode: 3
+  command_mode: 'variable'
+  enable_ft_sensors: true
+  asymmetric_obs: false
+  normalize_obs: true
+  apply_safety_damping: false
+  normalize_action: true
+  cube_obs_keypoints: true
+  reset_distribution:
+    object_initial_state:
+      type: pre_contact_policy
+    robot_initial_state:
+      dof_pos_stddev: 0.1
+      dof_vel_stddev: 0.2
+      type: ${if:${.....play},default,pre_contact_policy}
+  extract_contact: False
+  geometry:
+    xmin: 0.46
+    xmax: 0.54
+    ymin: -0.04
+    ymax: 0.04
+    holelength: 0.18
+    boxes:
+      box1:
+        x: 0.0
+        y: 0.0
+        z: 0.35
+        width: 0.0
+        length: 0.5
+        height: 0.1
+      box2:
+        x: 0.0
+        y: 0.0
+        z: 0.35
+        width: 0.0
+        length: 0.5
+        height: 0.1
+      box3:
+        x: 0.5
+        y: 0.0
+        z: 0.35
+        width: 0.0
+        length: 0.0
+        height: 0.1
+      box4:
+        x: 0.5
+        y: 0.0
+        z: 0.35
+        width: 0.0
+        length: 0.0
+        height: 0.1
+      box5:
+        x: 0.5
+        y: 0.0
+        z: 0.15
+        width: 0.4
+        length: 0.5
+        height: 0.30
+    object:
+      width: 0.10
+      length: 0.10
+      height: 0.1
+  reward_terms:
+    gripper_reach_object_rate:
+        activate: true
+        norm_p: 2
+        weight: -10
+    object_dist:
+      activate: true
+      weight1: 0.02 
+      weight2: 1000
+      th: 0.01
+      epsilon: 0.02
+    object_rot:
+      activate: true
+      weight1: 0.05
+      weight2: 1000
+      th: 0.1
+      epsilon: 0.02
+    obejct_move:
+      activate: false
+      weight1: 10
+      weight2: 300
+
+
+  # set to True if you use camera sensors in the environment
+  enableCameraSensors: False
+
+sim:
+  dt: 0.0166 # 1/60
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}} # set to False to run on CPU
+    num_position_iterations: 12
+    num_velocity_iterations: 1
+    contact_offset: 0.001
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    max_gpu_contact_pairs: 10000000 # 1024*1024
+    num_subscenes: ${....num_subscenes}
+    contact_collection: 0 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (default - all contacts)
+
+task:
+  randomize: False
